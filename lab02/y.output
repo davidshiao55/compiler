@@ -1,0 +1,3989 @@
+Terminals unused in grammar
+
+    NEWLINE
+
+
+State 33 conflicts: 1 shift/reduce
+State 42 conflicts: 1 shift/reduce
+State 46 conflicts: 1 shift/reduce
+State 49 conflicts: 1 shift/reduce
+State 50 conflicts: 2 shift/reduce
+State 51 conflicts: 1 shift/reduce
+State 56 conflicts: 1 shift/reduce
+State 118 conflicts: 10 reduce/reduce
+State 137 conflicts: 1 shift/reduce
+State 145 conflicts: 1 shift/reduce
+State 146 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 $@1: ε
+
+    2 Program: $@1 StatementList
+
+    3 StatementList: StatementList Statement
+    4              | Statement
+
+    5 Statement: Item
+    6          | LetStatement
+    7          | ExpressionStatement
+
+    8 LetStatement: LetSpecifier ID ';'
+    9             | LetSpecifier ID '=' Expression ';'
+   10             | LetSpecifier ID ':' Type ';'
+   11             | LetSpecifier ID ':' Type '=' Expression ';'
+
+   12 LetSpecifier: LET
+   13             | LET MUT
+
+   14 Type: PrimitiveType
+   15     | ReferenceType
+   16     | ArrayType
+
+   17 ArrayType: '[' Type ';' Expression ']'
+
+   18 ReferenceType: '&' Type
+
+   19 PrimitiveType: INT
+   20              | FLOAT
+   21              | BOOL
+   22              | STR
+
+   23 ExpressionStatement: ';'
+   24                    | ExpressionWithBlock ';'
+   25                    | ExpressionWithoutBlock ';'
+   26                    | ExpressionWithBlock
+   27                    | ExpressionWithoutBlock
+
+   28 Expression: ExpressionWithoutBlock
+   29           | ExpressionWithBlock
+
+   30 ExpressionWithoutBlock: OperatorExpression
+   31                       | ReturnExpression
+   32                       | BreakExpression
+   33                       | RangeExpression
+
+   34 ReturnExpression: RETURN Expression
+
+   35 BreakExpression: BREAK Expression
+
+   36 $@2: ε
+
+   37 RangeExpression: DOTDOT $@2 primary_expression
+
+   38 $@3: ε
+
+   39 RangeExpression: primary_expression DOTDOT $@3 primary_expression
+   40                | primary_expression DOTDOT
+
+   41 OperatorExpression: AssignmentExpression
+
+   42 AssignmentExpression: LogicalOrExpression
+   43                     | ID AssignmentOperator AssignmentExpression
+
+   44 AssignmentOperator: '='
+   45                   | MUL_ASSIGN
+   46                   | DIV_ASSIGN
+   47                   | REM_ASSIGN
+   48                   | ADD_ASSIGN
+   49                   | SUB_ASSIGN
+
+   50 LogicalOrExpression: LogicalAndExpression
+   51                    | LogicalOrExpression LOR LogicalAndExpression
+
+   52 LogicalAndExpression: OrExpression
+   53                     | LogicalAndExpression LAND OrExpression
+
+   54 OrExpression: AndExpression
+   55             | OrExpression '|' AndExpression
+
+   56 AndExpression: EqualityExpression
+   57              | AndExpression '&' EqualityExpression
+
+   58 EqualityExpression: RelationalExpression
+   59                   | EqualityExpression EQL RelationalExpression
+   60                   | EqualityExpression NEQ RelationalExpression
+
+   61 RelationalExpression: ShiftExpression
+   62                     | RelationalExpression '<' ShiftExpression
+   63                     | RelationalExpression '>' ShiftExpression
+   64                     | RelationalExpression GEQ ShiftExpression
+   65                     | RelationalExpression LEQ ShiftExpression
+
+   66 ShiftExpression: AdditiveExpression
+   67                | ShiftExpression RSHIFT AdditiveExpression
+   68                | ShiftExpression LSHIFT AdditiveExpression
+
+   69 AdditiveExpression: MultiplicativeExpression
+   70                   | AdditiveExpression '+' MultiplicativeExpression
+   71                   | AdditiveExpression '-' MultiplicativeExpression
+
+   72 MultiplicativeExpression: CastExpression
+   73                         | MultiplicativeExpression '*' CastExpression
+   74                         | MultiplicativeExpression '/' CastExpression
+   75                         | MultiplicativeExpression '%' CastExpression
+
+   76 CastExpression: UnaryExpression
+   77               | UnaryExpression AS Type
+
+   78 UnaryExpression: PostfixExpression
+   79                | '-' CastExpression
+   80                | '!' CastExpression
+   81                | '&' CastExpression
+
+   82 PostfixExpression: primary_expression
+   83                  | PostfixExpression '(' CallParams ')'
+   84                  | PostfixExpression '[' Expression ']'
+
+   85 CallParams: CallParam
+   86           | CallParams ',' CallParam
+
+   87 CallParam: Expression
+   88          | ε
+
+   89 primary_expression: PathExpression
+   90                   | LiteralExpression
+   91                   | '(' Expression ')'
+   92                   | ArrayExpression
+
+   93 ArrayExpression: '[' ArrayElements ']'
+
+   94 ArrayElements: Expression
+   95              | ArrayElements ',' Expression
+
+   96 LiteralExpression: '"' STRING_LIT '"'
+   97                  | '"' '"'
+   98                  | INT_LIT
+   99                  | FLOAT_LIT
+  100                  | TRUE
+  101                  | FALSE
+
+  102 PathExpression: ID
+  103               | PrimaryFunction
+
+  104 PrimaryFunction: PRINT
+  105                | PRINTLN
+
+  106 ExpressionWithBlock: BlockExpression
+  107                    | IfExpression
+  108                    | LoopExpression
+
+  109 $@4: ε
+
+  110 BlockExpression: '{' $@4 '}'
+
+  111 $@5: ε
+
+  112 BlockExpression: '{' $@5 StatementList '}'
+
+  113 IfExpression: IF Expression BlockExpression
+  114             | IF Expression BlockExpression ELSE BlockExpression
+
+  115 LoopExpression: PredicateLoopExpression
+  116               | InfiniteLoopExpression
+  117               | IteratorLoopExpression
+
+  118 PredicateLoopExpression: WHILE Expression BlockExpression
+
+  119 InfiniteLoopExpression: LOOP BlockExpression
+
+  120 $@6: ε
+
+  121 IteratorLoopExpression: FOR ID IN Expression $@6 '{' StatementList '}'
+
+  122 Item: Function
+
+  123 $@7: ε
+
+  124 $@8: ε
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList '}'
+
+  126 FunctionParameterList: FunctionParameter
+  127                      | FunctionParameterList ',' FunctionParameter
+
+  128 FunctionParameter: ID ':' Type
+  129                  | ε
+
+  130 FunctionReturnType: ARROW Type
+  131                   | ε
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '!' (33) 80
+    '"' (34) 96 97
+    '%' (37) 75
+    '&' (38) 18 57 81
+    '(' (40) 83 91 125
+    ')' (41) 83 91 125
+    '*' (42) 73
+    '+' (43) 70
+    ',' (44) 86 95 127
+    '-' (45) 71 79
+    '/' (47) 74
+    ':' (58) 10 11 128
+    ';' (59) 8 9 10 11 17 23 24 25
+    '<' (60) 62
+    '=' (61) 9 11 44
+    '>' (62) 63
+    '[' (91) 17 84 93
+    ']' (93) 17 84 93
+    '{' (123) 110 112 121 125
+    '|' (124) 55
+    '}' (125) 110 112 121 125
+    error (256)
+    LET (258) 12 13
+    MUT (259) 13
+    NEWLINE (260)
+    INT (261) 19
+    FLOAT (262) 20
+    BOOL (263) 21
+    STR (264) 22
+    TRUE (265) 100
+    FALSE (266) 101
+    GEQ (267) 64
+    LEQ (268) 65
+    EQL (269) 59
+    NEQ (270) 60
+    LOR (271) 51
+    LAND (272) 53
+    ADD_ASSIGN (273) 48
+    SUB_ASSIGN (274) 49
+    MUL_ASSIGN (275) 45
+    DIV_ASSIGN (276) 46
+    REM_ASSIGN (277) 47
+    IF (278) 113 114
+    ELSE (279) 114
+    FOR (280) 121
+    WHILE (281) 118
+    LOOP (282) 119
+    PRINT (283) 104
+    PRINTLN (284) 105
+    FUNC (285) 125
+    RETURN (286) 34
+    BREAK (287) 35
+    ID (288) 8 9 10 11 43 102 121 125 128
+    ARROW (289) 130
+    AS (290) 77
+    IN (291) 121
+    DOTDOT (292) 37 39 40
+    RSHIFT (293) 67
+    LSHIFT (294) 68
+    INT_LIT <i_val> (295) 98
+    FLOAT_LIT <f_val> (296) 99
+    STRING_LIT <s_val> (297) 96
+
+
+Nonterminals, with rules where they appear
+
+    $accept (64)
+        on left: 0
+    Program (65)
+        on left: 2
+        on right: 0
+    $@1 (66)
+        on left: 1
+        on right: 2
+    StatementList (67)
+        on left: 3 4
+        on right: 2 3 112 121 125
+    Statement (68)
+        on left: 5 6 7
+        on right: 3 4
+    LetStatement (69)
+        on left: 8 9 10 11
+        on right: 6
+    LetSpecifier (70)
+        on left: 12 13
+        on right: 8 9 10 11
+    Type <s_val> (71)
+        on left: 14 15 16
+        on right: 10 11 17 18 77 128 130
+    ArrayType (72)
+        on left: 17
+        on right: 16
+    ReferenceType (73)
+        on left: 18
+        on right: 15
+    PrimitiveType (74)
+        on left: 19 20 21 22
+        on right: 14
+    ExpressionStatement (75)
+        on left: 23 24 25 26 27
+        on right: 7
+    Expression (76)
+        on left: 28 29
+        on right: 9 11 17 34 35 84 87 91 94 95 113 114 118 121
+    ExpressionWithoutBlock (77)
+        on left: 30 31 32 33
+        on right: 25 27 28
+    ReturnExpression (78)
+        on left: 34
+        on right: 31
+    BreakExpression (79)
+        on left: 35
+        on right: 32
+    RangeExpression (80)
+        on left: 37 39 40
+        on right: 33
+    $@2 (81)
+        on left: 36
+        on right: 37
+    $@3 (82)
+        on left: 38
+        on right: 39
+    OperatorExpression (83)
+        on left: 41
+        on right: 30
+    AssignmentExpression (84)
+        on left: 42 43
+        on right: 41 43
+    AssignmentOperator (85)
+        on left: 44 45 46 47 48 49
+        on right: 43
+    LogicalOrExpression (86)
+        on left: 50 51
+        on right: 42 51
+    LogicalAndExpression (87)
+        on left: 52 53
+        on right: 50 51 53
+    OrExpression (88)
+        on left: 54 55
+        on right: 52 53 55
+    AndExpression (89)
+        on left: 56 57
+        on right: 54 55 57
+    EqualityExpression (90)
+        on left: 58 59 60
+        on right: 56 57 59 60
+    RelationalExpression (91)
+        on left: 61 62 63 64 65
+        on right: 58 59 60 62 63 64 65
+    ShiftExpression (92)
+        on left: 66 67 68
+        on right: 61 62 63 64 65 67 68
+    AdditiveExpression (93)
+        on left: 69 70 71
+        on right: 66 67 68 70 71
+    MultiplicativeExpression (94)
+        on left: 72 73 74 75
+        on right: 69 70 71 73 74 75
+    CastExpression (95)
+        on left: 76 77
+        on right: 72 73 74 75 79 80 81
+    UnaryExpression (96)
+        on left: 78 79 80 81
+        on right: 76 77
+    PostfixExpression (97)
+        on left: 82 83 84
+        on right: 78 83 84
+    CallParams (98)
+        on left: 85 86
+        on right: 83 86
+    CallParam (99)
+        on left: 87 88
+        on right: 85 86
+    primary_expression (100)
+        on left: 89 90 91 92
+        on right: 37 39 40 82
+    ArrayExpression (101)
+        on left: 93
+        on right: 92
+    ArrayElements (102)
+        on left: 94 95
+        on right: 93 95
+    LiteralExpression (103)
+        on left: 96 97 98 99 100 101
+        on right: 90
+    PathExpression (104)
+        on left: 102 103
+        on right: 89
+    PrimaryFunction (105)
+        on left: 104 105
+        on right: 103
+    ExpressionWithBlock (106)
+        on left: 106 107 108
+        on right: 24 26 29
+    BlockExpression (107)
+        on left: 110 112
+        on right: 106 113 114 118 119
+    $@4 (108)
+        on left: 109
+        on right: 110
+    $@5 (109)
+        on left: 111
+        on right: 112
+    IfExpression (110)
+        on left: 113 114
+        on right: 107
+    LoopExpression (111)
+        on left: 115 116 117
+        on right: 108
+    PredicateLoopExpression (112)
+        on left: 118
+        on right: 115
+    InfiniteLoopExpression (113)
+        on left: 119
+        on right: 116
+    IteratorLoopExpression (114)
+        on left: 121
+        on right: 117
+    $@6 (115)
+        on left: 120
+        on right: 121
+    Item (116)
+        on left: 122
+        on right: 5
+    Function (117)
+        on left: 125
+        on right: 122
+    $@7 (118)
+        on left: 123
+        on right: 125
+    $@8 (119)
+        on left: 124
+        on right: 125
+    FunctionParameterList (120)
+        on left: 126 127
+        on right: 125 127
+    FunctionParameter (121)
+        on left: 128 129
+        on right: 126 127
+    FunctionReturnType (122)
+        on left: 130 131
+        on right: 125
+
+
+State 0
+
+    0 $accept: • Program $end
+
+    $default  reduce using rule 1 ($@1)
+
+    Program  go to state 1
+    $@1      go to state 2
+
+
+State 1
+
+    0 $accept: Program • $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    2 Program: $@1 • StatementList
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    StatementList             go to state 28
+    Statement                 go to state 29
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 3
+
+    0 $accept: Program $end •
+
+    $default  accept
+
+
+State 4
+
+   12 LetSpecifier: LET •
+   13             | LET • MUT
+
+    MUT  shift, and go to state 65
+
+    $default  reduce using rule 12 (LetSpecifier)
+
+
+State 5
+
+  100 LiteralExpression: TRUE •
+
+    $default  reduce using rule 100 (LiteralExpression)
+
+
+State 6
+
+  101 LiteralExpression: FALSE •
+
+    $default  reduce using rule 101 (LiteralExpression)
+
+
+State 7
+
+  113 IfExpression: IF • Expression BlockExpression
+  114             | IF • Expression BlockExpression ELSE BlockExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 66
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 8
+
+  121 IteratorLoopExpression: FOR • ID IN Expression $@6 '{' StatementList '}'
+
+    ID  shift, and go to state 69
+
+
+State 9
+
+  118 PredicateLoopExpression: WHILE • Expression BlockExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 70
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 10
+
+  119 InfiniteLoopExpression: LOOP • BlockExpression
+
+    '{'  shift, and go to state 27
+
+    BlockExpression  go to state 71
+
+
+State 11
+
+  104 PrimaryFunction: PRINT •
+
+    $default  reduce using rule 104 (PrimaryFunction)
+
+
+State 12
+
+  105 PrimaryFunction: PRINTLN •
+
+    $default  reduce using rule 105 (PrimaryFunction)
+
+
+State 13
+
+  125 Function: FUNC • ID $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList '}'
+
+    ID  shift, and go to state 72
+
+
+State 14
+
+   34 ReturnExpression: RETURN • Expression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 73
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 15
+
+   35 BreakExpression: BREAK • Expression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 74
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 16
+
+   43 AssignmentExpression: ID • AssignmentOperator AssignmentExpression
+  102 PathExpression: ID •
+
+    ADD_ASSIGN  shift, and go to state 75
+    SUB_ASSIGN  shift, and go to state 76
+    MUL_ASSIGN  shift, and go to state 77
+    DIV_ASSIGN  shift, and go to state 78
+    REM_ASSIGN  shift, and go to state 79
+    '='         shift, and go to state 80
+
+    $default  reduce using rule 102 (PathExpression)
+
+    AssignmentOperator  go to state 81
+
+
+State 17
+
+   37 RangeExpression: DOTDOT • $@2 primary_expression
+
+    $default  reduce using rule 36 ($@2)
+
+    $@2  go to state 82
+
+
+State 18
+
+   98 LiteralExpression: INT_LIT •
+
+    $default  reduce using rule 98 (LiteralExpression)
+
+
+State 19
+
+   99 LiteralExpression: FLOAT_LIT •
+
+    $default  reduce using rule 99 (LiteralExpression)
+
+
+State 20
+
+   23 ExpressionStatement: ';' •
+
+    $default  reduce using rule 23 (ExpressionStatement)
+
+
+State 21
+
+   93 ArrayExpression: '[' • ArrayElements ']'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 83
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    ArrayElements             go to state 84
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 22
+
+   81 UnaryExpression: '&' • CastExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    CastExpression      go to state 86
+    UnaryExpression     go to state 49
+    PostfixExpression   go to state 50
+    primary_expression  go to state 87
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 23
+
+   79 UnaryExpression: '-' • CastExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    CastExpression      go to state 88
+    UnaryExpression     go to state 49
+    PostfixExpression   go to state 50
+    primary_expression  go to state 87
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 24
+
+   80 UnaryExpression: '!' • CastExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    CastExpression      go to state 89
+    UnaryExpression     go to state 49
+    PostfixExpression   go to state 50
+    primary_expression  go to state 87
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 25
+
+   91 primary_expression: '(' • Expression ')'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 90
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 26
+
+   96 LiteralExpression: '"' • STRING_LIT '"'
+   97                  | '"' • '"'
+
+    STRING_LIT  shift, and go to state 91
+    '"'         shift, and go to state 92
+
+
+State 27
+
+  110 BlockExpression: '{' • $@4 '}'
+  112                | '{' • $@5 StatementList '}'
+
+    '}'       reduce using rule 109 ($@4)
+    $default  reduce using rule 111 ($@5)
+
+    $@4  go to state 93
+    $@5  go to state 94
+
+
+State 28
+
+    2 Program: $@1 StatementList •
+    3 StatementList: StatementList • Statement
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    $default  reduce using rule 2 (Program)
+
+    Statement                 go to state 95
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 29
+
+    4 StatementList: Statement •
+
+    $default  reduce using rule 4 (StatementList)
+
+
+State 30
+
+    6 Statement: LetStatement •
+
+    $default  reduce using rule 6 (Statement)
+
+
+State 31
+
+    8 LetStatement: LetSpecifier • ID ';'
+    9             | LetSpecifier • ID '=' Expression ';'
+   10             | LetSpecifier • ID ':' Type ';'
+   11             | LetSpecifier • ID ':' Type '=' Expression ';'
+
+    ID  shift, and go to state 96
+
+
+State 32
+
+    7 Statement: ExpressionStatement •
+
+    $default  reduce using rule 7 (Statement)
+
+
+State 33
+
+   25 ExpressionStatement: ExpressionWithoutBlock • ';'
+   27                    | ExpressionWithoutBlock •
+
+    ';'  shift, and go to state 97
+
+    ';'       [reduce using rule 27 (ExpressionStatement)]
+    $default  reduce using rule 27 (ExpressionStatement)
+
+
+State 34
+
+   31 ExpressionWithoutBlock: ReturnExpression •
+
+    $default  reduce using rule 31 (ExpressionWithoutBlock)
+
+
+State 35
+
+   32 ExpressionWithoutBlock: BreakExpression •
+
+    $default  reduce using rule 32 (ExpressionWithoutBlock)
+
+
+State 36
+
+   33 ExpressionWithoutBlock: RangeExpression •
+
+    $default  reduce using rule 33 (ExpressionWithoutBlock)
+
+
+State 37
+
+   30 ExpressionWithoutBlock: OperatorExpression •
+
+    $default  reduce using rule 30 (ExpressionWithoutBlock)
+
+
+State 38
+
+   41 OperatorExpression: AssignmentExpression •
+
+    $default  reduce using rule 41 (OperatorExpression)
+
+
+State 39
+
+   42 AssignmentExpression: LogicalOrExpression •
+   51 LogicalOrExpression: LogicalOrExpression • LOR LogicalAndExpression
+
+    LOR  shift, and go to state 98
+
+    $default  reduce using rule 42 (AssignmentExpression)
+
+
+State 40
+
+   50 LogicalOrExpression: LogicalAndExpression •
+   53 LogicalAndExpression: LogicalAndExpression • LAND OrExpression
+
+    LAND  shift, and go to state 99
+
+    $default  reduce using rule 50 (LogicalOrExpression)
+
+
+State 41
+
+   52 LogicalAndExpression: OrExpression •
+   55 OrExpression: OrExpression • '|' AndExpression
+
+    '|'  shift, and go to state 100
+
+    $default  reduce using rule 52 (LogicalAndExpression)
+
+
+State 42
+
+   54 OrExpression: AndExpression •
+   57 AndExpression: AndExpression • '&' EqualityExpression
+
+    '&'  shift, and go to state 101
+
+    '&'       [reduce using rule 54 (OrExpression)]
+    $default  reduce using rule 54 (OrExpression)
+
+
+State 43
+
+   56 AndExpression: EqualityExpression •
+   59 EqualityExpression: EqualityExpression • EQL RelationalExpression
+   60                   | EqualityExpression • NEQ RelationalExpression
+
+    EQL  shift, and go to state 102
+    NEQ  shift, and go to state 103
+
+    $default  reduce using rule 56 (AndExpression)
+
+
+State 44
+
+   58 EqualityExpression: RelationalExpression •
+   62 RelationalExpression: RelationalExpression • '<' ShiftExpression
+   63                     | RelationalExpression • '>' ShiftExpression
+   64                     | RelationalExpression • GEQ ShiftExpression
+   65                     | RelationalExpression • LEQ ShiftExpression
+
+    GEQ  shift, and go to state 104
+    LEQ  shift, and go to state 105
+    '<'  shift, and go to state 106
+    '>'  shift, and go to state 107
+
+    $default  reduce using rule 58 (EqualityExpression)
+
+
+State 45
+
+   61 RelationalExpression: ShiftExpression •
+   67 ShiftExpression: ShiftExpression • RSHIFT AdditiveExpression
+   68                | ShiftExpression • LSHIFT AdditiveExpression
+
+    RSHIFT  shift, and go to state 108
+    LSHIFT  shift, and go to state 109
+
+    $default  reduce using rule 61 (RelationalExpression)
+
+
+State 46
+
+   66 ShiftExpression: AdditiveExpression •
+   70 AdditiveExpression: AdditiveExpression • '+' MultiplicativeExpression
+   71                   | AdditiveExpression • '-' MultiplicativeExpression
+
+    '+'  shift, and go to state 110
+    '-'  shift, and go to state 111
+
+    '-'       [reduce using rule 66 (ShiftExpression)]
+    $default  reduce using rule 66 (ShiftExpression)
+
+
+State 47
+
+   69 AdditiveExpression: MultiplicativeExpression •
+   73 MultiplicativeExpression: MultiplicativeExpression • '*' CastExpression
+   74                         | MultiplicativeExpression • '/' CastExpression
+   75                         | MultiplicativeExpression • '%' CastExpression
+
+    '*'  shift, and go to state 112
+    '/'  shift, and go to state 113
+    '%'  shift, and go to state 114
+
+    $default  reduce using rule 69 (AdditiveExpression)
+
+
+State 48
+
+   72 MultiplicativeExpression: CastExpression •
+
+    $default  reduce using rule 72 (MultiplicativeExpression)
+
+
+State 49
+
+   76 CastExpression: UnaryExpression •
+   77               | UnaryExpression • AS Type
+
+    AS  shift, and go to state 115
+
+    AS        [reduce using rule 76 (CastExpression)]
+    $default  reduce using rule 76 (CastExpression)
+
+
+State 50
+
+   78 UnaryExpression: PostfixExpression •
+   83 PostfixExpression: PostfixExpression • '(' CallParams ')'
+   84                  | PostfixExpression • '[' Expression ']'
+
+    '['  shift, and go to state 116
+    '('  shift, and go to state 117
+
+    '['       [reduce using rule 78 (UnaryExpression)]
+    '('       [reduce using rule 78 (UnaryExpression)]
+    $default  reduce using rule 78 (UnaryExpression)
+
+
+State 51
+
+   39 RangeExpression: primary_expression • DOTDOT $@3 primary_expression
+   40                | primary_expression • DOTDOT
+   82 PostfixExpression: primary_expression •
+
+    DOTDOT  shift, and go to state 118
+
+    DOTDOT    [reduce using rule 82 (PostfixExpression)]
+    $default  reduce using rule 82 (PostfixExpression)
+
+
+State 52
+
+   92 primary_expression: ArrayExpression •
+
+    $default  reduce using rule 92 (primary_expression)
+
+
+State 53
+
+   90 primary_expression: LiteralExpression •
+
+    $default  reduce using rule 90 (primary_expression)
+
+
+State 54
+
+   89 primary_expression: PathExpression •
+
+    $default  reduce using rule 89 (primary_expression)
+
+
+State 55
+
+  103 PathExpression: PrimaryFunction •
+
+    $default  reduce using rule 103 (PathExpression)
+
+
+State 56
+
+   24 ExpressionStatement: ExpressionWithBlock • ';'
+   26                    | ExpressionWithBlock •
+
+    ';'  shift, and go to state 119
+
+    ';'       [reduce using rule 26 (ExpressionStatement)]
+    $default  reduce using rule 26 (ExpressionStatement)
+
+
+State 57
+
+  106 ExpressionWithBlock: BlockExpression •
+
+    $default  reduce using rule 106 (ExpressionWithBlock)
+
+
+State 58
+
+  107 ExpressionWithBlock: IfExpression •
+
+    $default  reduce using rule 107 (ExpressionWithBlock)
+
+
+State 59
+
+  108 ExpressionWithBlock: LoopExpression •
+
+    $default  reduce using rule 108 (ExpressionWithBlock)
+
+
+State 60
+
+  115 LoopExpression: PredicateLoopExpression •
+
+    $default  reduce using rule 115 (LoopExpression)
+
+
+State 61
+
+  116 LoopExpression: InfiniteLoopExpression •
+
+    $default  reduce using rule 116 (LoopExpression)
+
+
+State 62
+
+  117 LoopExpression: IteratorLoopExpression •
+
+    $default  reduce using rule 117 (LoopExpression)
+
+
+State 63
+
+    5 Statement: Item •
+
+    $default  reduce using rule 5 (Statement)
+
+
+State 64
+
+  122 Item: Function •
+
+    $default  reduce using rule 122 (Item)
+
+
+State 65
+
+   13 LetSpecifier: LET MUT •
+
+    $default  reduce using rule 13 (LetSpecifier)
+
+
+State 66
+
+  113 IfExpression: IF Expression • BlockExpression
+  114             | IF Expression • BlockExpression ELSE BlockExpression
+
+    '{'  shift, and go to state 27
+
+    BlockExpression  go to state 120
+
+
+State 67
+
+   28 Expression: ExpressionWithoutBlock •
+
+    $default  reduce using rule 28 (Expression)
+
+
+State 68
+
+   29 Expression: ExpressionWithBlock •
+
+    $default  reduce using rule 29 (Expression)
+
+
+State 69
+
+  121 IteratorLoopExpression: FOR ID • IN Expression $@6 '{' StatementList '}'
+
+    IN  shift, and go to state 121
+
+
+State 70
+
+  118 PredicateLoopExpression: WHILE Expression • BlockExpression
+
+    '{'  shift, and go to state 27
+
+    BlockExpression  go to state 122
+
+
+State 71
+
+  119 InfiniteLoopExpression: LOOP BlockExpression •
+
+    $default  reduce using rule 119 (InfiniteLoopExpression)
+
+
+State 72
+
+  125 Function: FUNC ID • $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList '}'
+
+    $default  reduce using rule 123 ($@7)
+
+    $@7  go to state 123
+
+
+State 73
+
+   34 ReturnExpression: RETURN Expression •
+
+    $default  reduce using rule 34 (ReturnExpression)
+
+
+State 74
+
+   35 BreakExpression: BREAK Expression •
+
+    $default  reduce using rule 35 (BreakExpression)
+
+
+State 75
+
+   48 AssignmentOperator: ADD_ASSIGN •
+
+    $default  reduce using rule 48 (AssignmentOperator)
+
+
+State 76
+
+   49 AssignmentOperator: SUB_ASSIGN •
+
+    $default  reduce using rule 49 (AssignmentOperator)
+
+
+State 77
+
+   45 AssignmentOperator: MUL_ASSIGN •
+
+    $default  reduce using rule 45 (AssignmentOperator)
+
+
+State 78
+
+   46 AssignmentOperator: DIV_ASSIGN •
+
+    $default  reduce using rule 46 (AssignmentOperator)
+
+
+State 79
+
+   47 AssignmentOperator: REM_ASSIGN •
+
+    $default  reduce using rule 47 (AssignmentOperator)
+
+
+State 80
+
+   44 AssignmentOperator: '=' •
+
+    $default  reduce using rule 44 (AssignmentOperator)
+
+
+State 81
+
+   43 AssignmentExpression: ID AssignmentOperator • AssignmentExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 16
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    AssignmentExpression      go to state 124
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 82
+
+   37 RangeExpression: DOTDOT $@2 • primary_expression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    primary_expression  go to state 125
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 83
+
+   94 ArrayElements: Expression •
+
+    $default  reduce using rule 94 (ArrayElements)
+
+
+State 84
+
+   93 ArrayExpression: '[' ArrayElements • ']'
+   95 ArrayElements: ArrayElements • ',' Expression
+
+    ']'  shift, and go to state 126
+    ','  shift, and go to state 127
+
+
+State 85
+
+  102 PathExpression: ID •
+
+    $default  reduce using rule 102 (PathExpression)
+
+
+State 86
+
+   81 UnaryExpression: '&' CastExpression •
+
+    $default  reduce using rule 81 (UnaryExpression)
+
+
+State 87
+
+   82 PostfixExpression: primary_expression •
+
+    $default  reduce using rule 82 (PostfixExpression)
+
+
+State 88
+
+   79 UnaryExpression: '-' CastExpression •
+
+    $default  reduce using rule 79 (UnaryExpression)
+
+
+State 89
+
+   80 UnaryExpression: '!' CastExpression •
+
+    $default  reduce using rule 80 (UnaryExpression)
+
+
+State 90
+
+   91 primary_expression: '(' Expression • ')'
+
+    ')'  shift, and go to state 128
+
+
+State 91
+
+   96 LiteralExpression: '"' STRING_LIT • '"'
+
+    '"'  shift, and go to state 129
+
+
+State 92
+
+   97 LiteralExpression: '"' '"' •
+
+    $default  reduce using rule 97 (LiteralExpression)
+
+
+State 93
+
+  110 BlockExpression: '{' $@4 • '}'
+
+    '}'  shift, and go to state 130
+
+
+State 94
+
+  112 BlockExpression: '{' $@5 • StatementList '}'
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    StatementList             go to state 131
+    Statement                 go to state 29
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 95
+
+    3 StatementList: StatementList Statement •
+
+    $default  reduce using rule 3 (StatementList)
+
+
+State 96
+
+    8 LetStatement: LetSpecifier ID • ';'
+    9             | LetSpecifier ID • '=' Expression ';'
+   10             | LetSpecifier ID • ':' Type ';'
+   11             | LetSpecifier ID • ':' Type '=' Expression ';'
+
+    ';'  shift, and go to state 132
+    '='  shift, and go to state 133
+    ':'  shift, and go to state 134
+
+
+State 97
+
+   25 ExpressionStatement: ExpressionWithoutBlock ';' •
+
+    $default  reduce using rule 25 (ExpressionStatement)
+
+
+State 98
+
+   51 LogicalOrExpression: LogicalOrExpression LOR • LogicalAndExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    LogicalAndExpression      go to state 135
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 99
+
+   53 LogicalAndExpression: LogicalAndExpression LAND • OrExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    OrExpression              go to state 136
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 100
+
+   55 OrExpression: OrExpression '|' • AndExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    AndExpression             go to state 137
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 101
+
+   57 AndExpression: AndExpression '&' • EqualityExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    EqualityExpression        go to state 138
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 102
+
+   59 EqualityExpression: EqualityExpression EQL • RelationalExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    RelationalExpression      go to state 139
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 103
+
+   60 EqualityExpression: EqualityExpression NEQ • RelationalExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    RelationalExpression      go to state 140
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 104
+
+   64 RelationalExpression: RelationalExpression GEQ • ShiftExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    ShiftExpression           go to state 141
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 105
+
+   65 RelationalExpression: RelationalExpression LEQ • ShiftExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    ShiftExpression           go to state 142
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 106
+
+   62 RelationalExpression: RelationalExpression '<' • ShiftExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    ShiftExpression           go to state 143
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 107
+
+   63 RelationalExpression: RelationalExpression '>' • ShiftExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    ShiftExpression           go to state 144
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 108
+
+   67 ShiftExpression: ShiftExpression RSHIFT • AdditiveExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    AdditiveExpression        go to state 145
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 109
+
+   68 ShiftExpression: ShiftExpression LSHIFT • AdditiveExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    AdditiveExpression        go to state 146
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 110
+
+   70 AdditiveExpression: AdditiveExpression '+' • MultiplicativeExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    MultiplicativeExpression  go to state 147
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 111
+
+   71 AdditiveExpression: AdditiveExpression '-' • MultiplicativeExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    MultiplicativeExpression  go to state 148
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 87
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+
+
+State 112
+
+   73 MultiplicativeExpression: MultiplicativeExpression '*' • CastExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    CastExpression      go to state 149
+    UnaryExpression     go to state 49
+    PostfixExpression   go to state 50
+    primary_expression  go to state 87
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 113
+
+   74 MultiplicativeExpression: MultiplicativeExpression '/' • CastExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    CastExpression      go to state 150
+    UnaryExpression     go to state 49
+    PostfixExpression   go to state 50
+    primary_expression  go to state 87
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 114
+
+   75 MultiplicativeExpression: MultiplicativeExpression '%' • CastExpression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    CastExpression      go to state 151
+    UnaryExpression     go to state 49
+    PostfixExpression   go to state 50
+    primary_expression  go to state 87
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 115
+
+   77 CastExpression: UnaryExpression AS • Type
+
+    INT    shift, and go to state 152
+    FLOAT  shift, and go to state 153
+    BOOL   shift, and go to state 154
+    STR    shift, and go to state 155
+    '['    shift, and go to state 156
+    '&'    shift, and go to state 157
+
+    Type           go to state 158
+    ArrayType      go to state 159
+    ReferenceType  go to state 160
+    PrimitiveType  go to state 161
+
+
+State 116
+
+   84 PostfixExpression: PostfixExpression '[' • Expression ']'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 162
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 117
+
+   83 PostfixExpression: PostfixExpression '(' • CallParams ')'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    $default  reduce using rule 88 (CallParam)
+
+    Expression                go to state 163
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    CallParams                go to state 164
+    CallParam                 go to state 165
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 118
+
+   39 RangeExpression: primary_expression DOTDOT • $@3 primary_expression
+   40                | primary_expression DOTDOT •
+
+    TRUE       reduce using rule 38 ($@3)
+    TRUE       [reduce using rule 40 (RangeExpression)]
+    FALSE      reduce using rule 38 ($@3)
+    FALSE      [reduce using rule 40 (RangeExpression)]
+    PRINT      reduce using rule 38 ($@3)
+    PRINT      [reduce using rule 40 (RangeExpression)]
+    PRINTLN    reduce using rule 38 ($@3)
+    PRINTLN    [reduce using rule 40 (RangeExpression)]
+    ID         reduce using rule 38 ($@3)
+    ID         [reduce using rule 40 (RangeExpression)]
+    INT_LIT    reduce using rule 38 ($@3)
+    INT_LIT    [reduce using rule 40 (RangeExpression)]
+    FLOAT_LIT  reduce using rule 38 ($@3)
+    FLOAT_LIT  [reduce using rule 40 (RangeExpression)]
+    '['        reduce using rule 38 ($@3)
+    '['        [reduce using rule 40 (RangeExpression)]
+    '('        reduce using rule 38 ($@3)
+    '('        [reduce using rule 40 (RangeExpression)]
+    '"'        reduce using rule 38 ($@3)
+    '"'        [reduce using rule 40 (RangeExpression)]
+    $default   reduce using rule 40 (RangeExpression)
+
+    $@3  go to state 166
+
+
+State 119
+
+   24 ExpressionStatement: ExpressionWithBlock ';' •
+
+    $default  reduce using rule 24 (ExpressionStatement)
+
+
+State 120
+
+  113 IfExpression: IF Expression BlockExpression •
+  114             | IF Expression BlockExpression • ELSE BlockExpression
+
+    ELSE  shift, and go to state 167
+
+    $default  reduce using rule 113 (IfExpression)
+
+
+State 121
+
+  121 IteratorLoopExpression: FOR ID IN • Expression $@6 '{' StatementList '}'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 168
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 122
+
+  118 PredicateLoopExpression: WHILE Expression BlockExpression •
+
+    $default  reduce using rule 118 (PredicateLoopExpression)
+
+
+State 123
+
+  125 Function: FUNC ID $@7 • '(' FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList '}'
+
+    '('  shift, and go to state 169
+
+
+State 124
+
+   43 AssignmentExpression: ID AssignmentOperator AssignmentExpression •
+
+    $default  reduce using rule 43 (AssignmentExpression)
+
+
+State 125
+
+   37 RangeExpression: DOTDOT $@2 primary_expression •
+
+    $default  reduce using rule 37 (RangeExpression)
+
+
+State 126
+
+   93 ArrayExpression: '[' ArrayElements ']' •
+
+    $default  reduce using rule 93 (ArrayExpression)
+
+
+State 127
+
+   95 ArrayElements: ArrayElements ',' • Expression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 170
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 128
+
+   91 primary_expression: '(' Expression ')' •
+
+    $default  reduce using rule 91 (primary_expression)
+
+
+State 129
+
+   96 LiteralExpression: '"' STRING_LIT '"' •
+
+    $default  reduce using rule 96 (LiteralExpression)
+
+
+State 130
+
+  110 BlockExpression: '{' $@4 '}' •
+
+    $default  reduce using rule 110 (BlockExpression)
+
+
+State 131
+
+    3 StatementList: StatementList • Statement
+  112 BlockExpression: '{' $@5 StatementList • '}'
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+    '}'        shift, and go to state 171
+
+    Statement                 go to state 95
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 132
+
+    8 LetStatement: LetSpecifier ID ';' •
+
+    $default  reduce using rule 8 (LetStatement)
+
+
+State 133
+
+    9 LetStatement: LetSpecifier ID '=' • Expression ';'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 172
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 134
+
+   10 LetStatement: LetSpecifier ID ':' • Type ';'
+   11             | LetSpecifier ID ':' • Type '=' Expression ';'
+
+    INT    shift, and go to state 152
+    FLOAT  shift, and go to state 153
+    BOOL   shift, and go to state 154
+    STR    shift, and go to state 155
+    '['    shift, and go to state 156
+    '&'    shift, and go to state 157
+
+    Type           go to state 173
+    ArrayType      go to state 159
+    ReferenceType  go to state 160
+    PrimitiveType  go to state 161
+
+
+State 135
+
+   51 LogicalOrExpression: LogicalOrExpression LOR LogicalAndExpression •
+   53 LogicalAndExpression: LogicalAndExpression • LAND OrExpression
+
+    LAND  shift, and go to state 99
+
+    $default  reduce using rule 51 (LogicalOrExpression)
+
+
+State 136
+
+   53 LogicalAndExpression: LogicalAndExpression LAND OrExpression •
+   55 OrExpression: OrExpression • '|' AndExpression
+
+    '|'  shift, and go to state 100
+
+    $default  reduce using rule 53 (LogicalAndExpression)
+
+
+State 137
+
+   55 OrExpression: OrExpression '|' AndExpression •
+   57 AndExpression: AndExpression • '&' EqualityExpression
+
+    '&'  shift, and go to state 101
+
+    '&'       [reduce using rule 55 (OrExpression)]
+    $default  reduce using rule 55 (OrExpression)
+
+
+State 138
+
+   57 AndExpression: AndExpression '&' EqualityExpression •
+   59 EqualityExpression: EqualityExpression • EQL RelationalExpression
+   60                   | EqualityExpression • NEQ RelationalExpression
+
+    EQL  shift, and go to state 102
+    NEQ  shift, and go to state 103
+
+    $default  reduce using rule 57 (AndExpression)
+
+
+State 139
+
+   59 EqualityExpression: EqualityExpression EQL RelationalExpression •
+   62 RelationalExpression: RelationalExpression • '<' ShiftExpression
+   63                     | RelationalExpression • '>' ShiftExpression
+   64                     | RelationalExpression • GEQ ShiftExpression
+   65                     | RelationalExpression • LEQ ShiftExpression
+
+    GEQ  shift, and go to state 104
+    LEQ  shift, and go to state 105
+    '<'  shift, and go to state 106
+    '>'  shift, and go to state 107
+
+    $default  reduce using rule 59 (EqualityExpression)
+
+
+State 140
+
+   60 EqualityExpression: EqualityExpression NEQ RelationalExpression •
+   62 RelationalExpression: RelationalExpression • '<' ShiftExpression
+   63                     | RelationalExpression • '>' ShiftExpression
+   64                     | RelationalExpression • GEQ ShiftExpression
+   65                     | RelationalExpression • LEQ ShiftExpression
+
+    GEQ  shift, and go to state 104
+    LEQ  shift, and go to state 105
+    '<'  shift, and go to state 106
+    '>'  shift, and go to state 107
+
+    $default  reduce using rule 60 (EqualityExpression)
+
+
+State 141
+
+   64 RelationalExpression: RelationalExpression GEQ ShiftExpression •
+   67 ShiftExpression: ShiftExpression • RSHIFT AdditiveExpression
+   68                | ShiftExpression • LSHIFT AdditiveExpression
+
+    RSHIFT  shift, and go to state 108
+    LSHIFT  shift, and go to state 109
+
+    $default  reduce using rule 64 (RelationalExpression)
+
+
+State 142
+
+   65 RelationalExpression: RelationalExpression LEQ ShiftExpression •
+   67 ShiftExpression: ShiftExpression • RSHIFT AdditiveExpression
+   68                | ShiftExpression • LSHIFT AdditiveExpression
+
+    RSHIFT  shift, and go to state 108
+    LSHIFT  shift, and go to state 109
+
+    $default  reduce using rule 65 (RelationalExpression)
+
+
+State 143
+
+   62 RelationalExpression: RelationalExpression '<' ShiftExpression •
+   67 ShiftExpression: ShiftExpression • RSHIFT AdditiveExpression
+   68                | ShiftExpression • LSHIFT AdditiveExpression
+
+    RSHIFT  shift, and go to state 108
+    LSHIFT  shift, and go to state 109
+
+    $default  reduce using rule 62 (RelationalExpression)
+
+
+State 144
+
+   63 RelationalExpression: RelationalExpression '>' ShiftExpression •
+   67 ShiftExpression: ShiftExpression • RSHIFT AdditiveExpression
+   68                | ShiftExpression • LSHIFT AdditiveExpression
+
+    RSHIFT  shift, and go to state 108
+    LSHIFT  shift, and go to state 109
+
+    $default  reduce using rule 63 (RelationalExpression)
+
+
+State 145
+
+   67 ShiftExpression: ShiftExpression RSHIFT AdditiveExpression •
+   70 AdditiveExpression: AdditiveExpression • '+' MultiplicativeExpression
+   71                   | AdditiveExpression • '-' MultiplicativeExpression
+
+    '+'  shift, and go to state 110
+    '-'  shift, and go to state 111
+
+    '-'       [reduce using rule 67 (ShiftExpression)]
+    $default  reduce using rule 67 (ShiftExpression)
+
+
+State 146
+
+   68 ShiftExpression: ShiftExpression LSHIFT AdditiveExpression •
+   70 AdditiveExpression: AdditiveExpression • '+' MultiplicativeExpression
+   71                   | AdditiveExpression • '-' MultiplicativeExpression
+
+    '+'  shift, and go to state 110
+    '-'  shift, and go to state 111
+
+    '-'       [reduce using rule 68 (ShiftExpression)]
+    $default  reduce using rule 68 (ShiftExpression)
+
+
+State 147
+
+   70 AdditiveExpression: AdditiveExpression '+' MultiplicativeExpression •
+   73 MultiplicativeExpression: MultiplicativeExpression • '*' CastExpression
+   74                         | MultiplicativeExpression • '/' CastExpression
+   75                         | MultiplicativeExpression • '%' CastExpression
+
+    '*'  shift, and go to state 112
+    '/'  shift, and go to state 113
+    '%'  shift, and go to state 114
+
+    $default  reduce using rule 70 (AdditiveExpression)
+
+
+State 148
+
+   71 AdditiveExpression: AdditiveExpression '-' MultiplicativeExpression •
+   73 MultiplicativeExpression: MultiplicativeExpression • '*' CastExpression
+   74                         | MultiplicativeExpression • '/' CastExpression
+   75                         | MultiplicativeExpression • '%' CastExpression
+
+    '*'  shift, and go to state 112
+    '/'  shift, and go to state 113
+    '%'  shift, and go to state 114
+
+    $default  reduce using rule 71 (AdditiveExpression)
+
+
+State 149
+
+   73 MultiplicativeExpression: MultiplicativeExpression '*' CastExpression •
+
+    $default  reduce using rule 73 (MultiplicativeExpression)
+
+
+State 150
+
+   74 MultiplicativeExpression: MultiplicativeExpression '/' CastExpression •
+
+    $default  reduce using rule 74 (MultiplicativeExpression)
+
+
+State 151
+
+   75 MultiplicativeExpression: MultiplicativeExpression '%' CastExpression •
+
+    $default  reduce using rule 75 (MultiplicativeExpression)
+
+
+State 152
+
+   19 PrimitiveType: INT •
+
+    $default  reduce using rule 19 (PrimitiveType)
+
+
+State 153
+
+   20 PrimitiveType: FLOAT •
+
+    $default  reduce using rule 20 (PrimitiveType)
+
+
+State 154
+
+   21 PrimitiveType: BOOL •
+
+    $default  reduce using rule 21 (PrimitiveType)
+
+
+State 155
+
+   22 PrimitiveType: STR •
+
+    $default  reduce using rule 22 (PrimitiveType)
+
+
+State 156
+
+   17 ArrayType: '[' • Type ';' Expression ']'
+
+    INT    shift, and go to state 152
+    FLOAT  shift, and go to state 153
+    BOOL   shift, and go to state 154
+    STR    shift, and go to state 155
+    '['    shift, and go to state 156
+    '&'    shift, and go to state 157
+
+    Type           go to state 174
+    ArrayType      go to state 159
+    ReferenceType  go to state 160
+    PrimitiveType  go to state 161
+
+
+State 157
+
+   18 ReferenceType: '&' • Type
+
+    INT    shift, and go to state 152
+    FLOAT  shift, and go to state 153
+    BOOL   shift, and go to state 154
+    STR    shift, and go to state 155
+    '['    shift, and go to state 156
+    '&'    shift, and go to state 157
+
+    Type           go to state 175
+    ArrayType      go to state 159
+    ReferenceType  go to state 160
+    PrimitiveType  go to state 161
+
+
+State 158
+
+   77 CastExpression: UnaryExpression AS Type •
+
+    $default  reduce using rule 77 (CastExpression)
+
+
+State 159
+
+   16 Type: ArrayType •
+
+    $default  reduce using rule 16 (Type)
+
+
+State 160
+
+   15 Type: ReferenceType •
+
+    $default  reduce using rule 15 (Type)
+
+
+State 161
+
+   14 Type: PrimitiveType •
+
+    $default  reduce using rule 14 (Type)
+
+
+State 162
+
+   84 PostfixExpression: PostfixExpression '[' Expression • ']'
+
+    ']'  shift, and go to state 176
+
+
+State 163
+
+   87 CallParam: Expression •
+
+    $default  reduce using rule 87 (CallParam)
+
+
+State 164
+
+   83 PostfixExpression: PostfixExpression '(' CallParams • ')'
+   86 CallParams: CallParams • ',' CallParam
+
+    ')'  shift, and go to state 177
+    ','  shift, and go to state 178
+
+
+State 165
+
+   85 CallParams: CallParam •
+
+    $default  reduce using rule 85 (CallParams)
+
+
+State 166
+
+   39 RangeExpression: primary_expression DOTDOT $@3 • primary_expression
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    ID         shift, and go to state 85
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+
+    primary_expression  go to state 179
+    ArrayExpression     go to state 52
+    LiteralExpression   go to state 53
+    PathExpression      go to state 54
+    PrimaryFunction     go to state 55
+
+
+State 167
+
+  114 IfExpression: IF Expression BlockExpression ELSE • BlockExpression
+
+    '{'  shift, and go to state 27
+
+    BlockExpression  go to state 180
+
+
+State 168
+
+  121 IteratorLoopExpression: FOR ID IN Expression • $@6 '{' StatementList '}'
+
+    $default  reduce using rule 120 ($@6)
+
+    $@6  go to state 181
+
+
+State 169
+
+  125 Function: FUNC ID $@7 '(' • FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList '}'
+
+    ID  shift, and go to state 182
+
+    $default  reduce using rule 129 (FunctionParameter)
+
+    FunctionParameterList  go to state 183
+    FunctionParameter      go to state 184
+
+
+State 170
+
+   95 ArrayElements: ArrayElements ',' Expression •
+
+    $default  reduce using rule 95 (ArrayElements)
+
+
+State 171
+
+  112 BlockExpression: '{' $@5 StatementList '}' •
+
+    $default  reduce using rule 112 (BlockExpression)
+
+
+State 172
+
+    9 LetStatement: LetSpecifier ID '=' Expression • ';'
+
+    ';'  shift, and go to state 185
+
+
+State 173
+
+   10 LetStatement: LetSpecifier ID ':' Type • ';'
+   11             | LetSpecifier ID ':' Type • '=' Expression ';'
+
+    ';'  shift, and go to state 186
+    '='  shift, and go to state 187
+
+
+State 174
+
+   17 ArrayType: '[' Type • ';' Expression ']'
+
+    ';'  shift, and go to state 188
+
+
+State 175
+
+   18 ReferenceType: '&' Type •
+
+    $default  reduce using rule 18 (ReferenceType)
+
+
+State 176
+
+   84 PostfixExpression: PostfixExpression '[' Expression ']' •
+
+    $default  reduce using rule 84 (PostfixExpression)
+
+
+State 177
+
+   83 PostfixExpression: PostfixExpression '(' CallParams ')' •
+
+    $default  reduce using rule 83 (PostfixExpression)
+
+
+State 178
+
+   86 CallParams: CallParams ',' • CallParam
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    $default  reduce using rule 88 (CallParam)
+
+    Expression                go to state 163
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    CallParam                 go to state 189
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 179
+
+   39 RangeExpression: primary_expression DOTDOT $@3 primary_expression •
+
+    $default  reduce using rule 39 (RangeExpression)
+
+
+State 180
+
+  114 IfExpression: IF Expression BlockExpression ELSE BlockExpression •
+
+    $default  reduce using rule 114 (IfExpression)
+
+
+State 181
+
+  121 IteratorLoopExpression: FOR ID IN Expression $@6 • '{' StatementList '}'
+
+    '{'  shift, and go to state 190
+
+
+State 182
+
+  128 FunctionParameter: ID • ':' Type
+
+    ':'  shift, and go to state 191
+
+
+State 183
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList • ')' FunctionReturnType $@8 '{' StatementList '}'
+  127 FunctionParameterList: FunctionParameterList • ',' FunctionParameter
+
+    ')'  shift, and go to state 192
+    ','  shift, and go to state 193
+
+
+State 184
+
+  126 FunctionParameterList: FunctionParameter •
+
+    $default  reduce using rule 126 (FunctionParameterList)
+
+
+State 185
+
+    9 LetStatement: LetSpecifier ID '=' Expression ';' •
+
+    $default  reduce using rule 9 (LetStatement)
+
+
+State 186
+
+   10 LetStatement: LetSpecifier ID ':' Type ';' •
+
+    $default  reduce using rule 10 (LetStatement)
+
+
+State 187
+
+   11 LetStatement: LetSpecifier ID ':' Type '=' • Expression ';'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 194
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 188
+
+   17 ArrayType: '[' Type ';' • Expression ']'
+
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    Expression                go to state 195
+    ExpressionWithoutBlock    go to state 67
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 68
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+
+
+State 189
+
+   86 CallParams: CallParams ',' CallParam •
+
+    $default  reduce using rule 86 (CallParams)
+
+
+State 190
+
+  121 IteratorLoopExpression: FOR ID IN Expression $@6 '{' • StatementList '}'
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    StatementList             go to state 196
+    Statement                 go to state 29
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 191
+
+  128 FunctionParameter: ID ':' • Type
+
+    INT    shift, and go to state 152
+    FLOAT  shift, and go to state 153
+    BOOL   shift, and go to state 154
+    STR    shift, and go to state 155
+    '['    shift, and go to state 156
+    '&'    shift, and go to state 157
+
+    Type           go to state 197
+    ArrayType      go to state 159
+    ReferenceType  go to state 160
+    PrimitiveType  go to state 161
+
+
+State 192
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' • FunctionReturnType $@8 '{' StatementList '}'
+
+    ARROW  shift, and go to state 198
+
+    $default  reduce using rule 131 (FunctionReturnType)
+
+    FunctionReturnType  go to state 199
+
+
+State 193
+
+  127 FunctionParameterList: FunctionParameterList ',' • FunctionParameter
+
+    ID  shift, and go to state 182
+
+    $default  reduce using rule 129 (FunctionParameter)
+
+    FunctionParameter  go to state 200
+
+
+State 194
+
+   11 LetStatement: LetSpecifier ID ':' Type '=' Expression • ';'
+
+    ';'  shift, and go to state 201
+
+
+State 195
+
+   17 ArrayType: '[' Type ';' Expression • ']'
+
+    ']'  shift, and go to state 202
+
+
+State 196
+
+    3 StatementList: StatementList • Statement
+  121 IteratorLoopExpression: FOR ID IN Expression $@6 '{' StatementList • '}'
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+    '}'        shift, and go to state 203
+
+    Statement                 go to state 95
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 197
+
+  128 FunctionParameter: ID ':' Type •
+
+    $default  reduce using rule 128 (FunctionParameter)
+
+
+State 198
+
+  130 FunctionReturnType: ARROW • Type
+
+    INT    shift, and go to state 152
+    FLOAT  shift, and go to state 153
+    BOOL   shift, and go to state 154
+    STR    shift, and go to state 155
+    '['    shift, and go to state 156
+    '&'    shift, and go to state 157
+
+    Type           go to state 204
+    ArrayType      go to state 159
+    ReferenceType  go to state 160
+    PrimitiveType  go to state 161
+
+
+State 199
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' FunctionReturnType • $@8 '{' StatementList '}'
+
+    $default  reduce using rule 124 ($@8)
+
+    $@8  go to state 205
+
+
+State 200
+
+  127 FunctionParameterList: FunctionParameterList ',' FunctionParameter •
+
+    $default  reduce using rule 127 (FunctionParameterList)
+
+
+State 201
+
+   11 LetStatement: LetSpecifier ID ':' Type '=' Expression ';' •
+
+    $default  reduce using rule 11 (LetStatement)
+
+
+State 202
+
+   17 ArrayType: '[' Type ';' Expression ']' •
+
+    $default  reduce using rule 17 (ArrayType)
+
+
+State 203
+
+  121 IteratorLoopExpression: FOR ID IN Expression $@6 '{' StatementList '}' •
+
+    $default  reduce using rule 121 (IteratorLoopExpression)
+
+
+State 204
+
+  130 FunctionReturnType: ARROW Type •
+
+    $default  reduce using rule 130 (FunctionReturnType)
+
+
+State 205
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 • '{' StatementList '}'
+
+    '{'  shift, and go to state 206
+
+
+State 206
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 '{' • StatementList '}'
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+
+    StatementList             go to state 207
+    Statement                 go to state 29
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 207
+
+    3 StatementList: StatementList • Statement
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList • '}'
+
+    LET        shift, and go to state 4
+    TRUE       shift, and go to state 5
+    FALSE      shift, and go to state 6
+    IF         shift, and go to state 7
+    FOR        shift, and go to state 8
+    WHILE      shift, and go to state 9
+    LOOP       shift, and go to state 10
+    PRINT      shift, and go to state 11
+    PRINTLN    shift, and go to state 12
+    FUNC       shift, and go to state 13
+    RETURN     shift, and go to state 14
+    BREAK      shift, and go to state 15
+    ID         shift, and go to state 16
+    DOTDOT     shift, and go to state 17
+    INT_LIT    shift, and go to state 18
+    FLOAT_LIT  shift, and go to state 19
+    ';'        shift, and go to state 20
+    '['        shift, and go to state 21
+    '&'        shift, and go to state 22
+    '-'        shift, and go to state 23
+    '!'        shift, and go to state 24
+    '('        shift, and go to state 25
+    '"'        shift, and go to state 26
+    '{'        shift, and go to state 27
+    '}'        shift, and go to state 208
+
+    Statement                 go to state 95
+    LetStatement              go to state 30
+    LetSpecifier              go to state 31
+    ExpressionStatement       go to state 32
+    ExpressionWithoutBlock    go to state 33
+    ReturnExpression          go to state 34
+    BreakExpression           go to state 35
+    RangeExpression           go to state 36
+    OperatorExpression        go to state 37
+    AssignmentExpression      go to state 38
+    LogicalOrExpression       go to state 39
+    LogicalAndExpression      go to state 40
+    OrExpression              go to state 41
+    AndExpression             go to state 42
+    EqualityExpression        go to state 43
+    RelationalExpression      go to state 44
+    ShiftExpression           go to state 45
+    AdditiveExpression        go to state 46
+    MultiplicativeExpression  go to state 47
+    CastExpression            go to state 48
+    UnaryExpression           go to state 49
+    PostfixExpression         go to state 50
+    primary_expression        go to state 51
+    ArrayExpression           go to state 52
+    LiteralExpression         go to state 53
+    PathExpression            go to state 54
+    PrimaryFunction           go to state 55
+    ExpressionWithBlock       go to state 56
+    BlockExpression           go to state 57
+    IfExpression              go to state 58
+    LoopExpression            go to state 59
+    PredicateLoopExpression   go to state 60
+    InfiniteLoopExpression    go to state 61
+    IteratorLoopExpression    go to state 62
+    Item                      go to state 63
+    Function                  go to state 64
+
+
+State 208
+
+  125 Function: FUNC ID $@7 '(' FunctionParameterList ')' FunctionReturnType $@8 '{' StatementList '}' •
+
+    $default  reduce using rule 125 (Function)
